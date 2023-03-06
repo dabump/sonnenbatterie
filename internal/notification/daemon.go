@@ -4,24 +4,29 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/containrrr/shoutrrr"
 	"github.com/dabump/sonnenbatterie/internal/config"
 	"github.com/dabump/sonnenbatterie/internal/sonnenbatterie"
 	"github.com/dabump/sonnenbatterie/internal/trend"
 )
 
+type MessageDispatcher interface {
+	Send(message string) []error
+}
+
 type notificationEngine struct {
 	config              *config.Config
 	context             context.Context
+	dispatcher          MessageDispatcher
 	notificationChannel <-chan []*sonnenbatterie.Status
 }
 
 func NewDaemon(ctx context.Context, cfg *config.Config,
-	chn <-chan []*sonnenbatterie.Status) *notificationEngine {
+	chn <-chan []*sonnenbatterie.Status, dispatcher MessageDispatcher) *notificationEngine {
 
 	ne := notificationEngine{
 		config:              cfg,
 		context:             ctx,
+		dispatcher:          dispatcher,
 		notificationChannel: chn,
 	}
 
@@ -53,7 +58,7 @@ func (n *notificationEngine) start() {
 						message = fmt.Sprintf("sonnenbatterie at %v%% with %s trend", values[0], trend.Calculate(values))
 					}
 					fmt.Printf("message: %v\n", message)
-					err := shoutrrr.Send(n.config.ShoutrrrURL, message)
+					err := n.dispatcher.Send(message)
 					if err != nil {
 						fmt.Printf("err: %v\n", err)
 					}
