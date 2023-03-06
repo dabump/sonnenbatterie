@@ -16,7 +16,7 @@ type Config struct {
 	SonnenBatterieProtocolScheme    string `json:"protocolScheme"`
 	SonnenBatteriePollingTimeInMins uint   `json:"pollingTimeInMinutes"`
 
-	ShoutrrrURL          string `json:"shoutrrrUrl`
+	ShoutrrrURL          string `json:"shoutrrrUrl"`
 	HttpTimeoutInMinutes uint   `json:"timeoutInMinutes"`
 }
 
