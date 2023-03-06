@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	lowerThresholdNotification int = 51
-	upperThresholdNotification int = 53
+	lowerThresholdNotification int = 10
+	upperThresholdNotification int = 90
 )
 
 type ruleEngine struct {
