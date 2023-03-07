@@ -59,6 +59,7 @@ func (d *Daemon) start() {
 					status, err := d.sonnenClient.GetStatus()
 					if err != nil {
 						fmt.Printf("error during communication to sonnen batterie: %v\n", err)
+						continue
 					}
 
 					d.reverseLimitQueue.Enqueue(status)
