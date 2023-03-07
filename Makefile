@@ -2,12 +2,17 @@ GO_FLAGS	?=
 NAME	 	:= sonnenbatterie
 PACKAGE		:= github.com/dabump/$(NAME)
 BIN_PREFIX	:= bin
+DOCKER_BIN  := podman
 
 default: help
 
 .PHONY: test
 test: ## Run all tests
 	@go clean --testcache && go test ./...
+
+docker: ## Build docker container & start
+	@${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
+	${DOCKER_BIN} run --rm -d --name sonnenbatterie-daemon sonnenbatterie/daemon
 
 generate: ## Generate mocks
 	@go generate ./...
