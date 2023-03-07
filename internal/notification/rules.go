@@ -2,6 +2,7 @@ package notification
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dabump/sonnenbatterie/internal/trend"
 )
@@ -14,25 +15,29 @@ const (
 type ruleEngine struct {
 	notifiedOnFull        bool
 	notifiedOnEmpty       bool
+	lastReset             time.Time
 	lastNotificationTrend trend.Trend
 }
 
 func newRulesEngine() *ruleEngine {
 	return &ruleEngine{
-		notifiedOnFull: false,
+		notifiedOnFull:  false,
 		notifiedOnEmpty: false,
+		lastReset:       time.Now(),
 	}
 }
 
 func (r *ruleEngine) dispatchNotification(values []int) bool {
 	// Determine initial trend
 	t := trend.Calculate(values)
-	if r.lastNotificationTrend != trend.Upward &&
-		r.lastNotificationTrend != trend.Downward &&
-		r.lastNotificationTrend != trend.NoTrend {
-		r.lastNotificationTrend = t
-	}
 	fmt.Printf("trend: %v - %v%% \n", t, values[0])
+
+	if has24HoursPassed(r.lastReset) {
+		r.lastReset = time.Now()
+		r.notifiedOnFull = false
+		r.notifiedOnEmpty = false
+		r.lastNotificationTrend = ""
+	}
 
 	// If battery fully charged (100%) and not yet been notified, then enable dispatching
 	if t == trend.Upward && values[0] == 100 && !r.notifiedOnFull {
@@ -62,4 +67,10 @@ func (r *ruleEngine) dispatchNotification(values []int) bool {
 
 	return false
 
+}
+
+func has24HoursPassed(lastChecked time.Time) bool {
+	now := time.Now()
+	elapsed := now.Sub(lastChecked)
+	return elapsed >= 24*time.Hour
 }
