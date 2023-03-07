@@ -18,6 +18,11 @@ import (
 
 func main() {
 	cfg := config.LoadConfig()
+	shottrDispatcher := dispatch.NewShoutrrrDispatcher(cfg)
+	err := shottrDispatcher.Send("sonnenbatterie daemon started")
+	if len(err) >= 1 && err[0] != nil {
+		fmt.Printf("could not invoke notification dispatcher err: %v\n", err)
+	}
 
 	client := http.Client{
 		Timeout: time.Duration(cfg.HttpTimeoutInMinutes) * time.Minute,
@@ -26,7 +31,6 @@ func main() {
 		},
 	}
 	sonnenClient := sonnenbatterie.NewClient(&client, cfg)
-	shottrDispatcher := dispatch.NewShoutrrrDispatcher(cfg)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	notificationChannel := make(chan []*sonnenbatterie.Status)
@@ -40,5 +44,6 @@ func main() {
 
 	cancel()
 	fmt.Print("sonnen batterie deamon stopping...\n")
+	shottrDispatcher.Send("sonnenbatterie daemon stopped")
 	time.Sleep(2 * time.Second)
 }
