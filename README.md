@@ -1,6 +1,6 @@
 # Sonnenbatterie trend notification
 ## Background
-If you are the onwer of a Sonnen battery in your house, there is a good chance that the battery
+If you are the owner of a Sonnen battery in your house, there is a good chance that the battery
 will be connected to your home network, with a local IP, that can be used to obtain status info.
 The battery has a unauthenticated REST endpoint that can be used to determine the
 Usable state of charge (USOC).

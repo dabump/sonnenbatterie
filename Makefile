@@ -23,6 +23,7 @@ cover: ## Run test coverage suite
 
 build: ## Builds the token bucket
 	@go build ${GO_FLAGS} -o ${BIN_PREFIX}/status ./cmd/status/main.go
+	@go build ${GO_FLAGS} -o ${BIN_PREFIX}/daemon ./cmd/daemon/main.go
 
 clean: ## Cleans the build binaries
 	@rm -rf ${BIN_PREFIX}

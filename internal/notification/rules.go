@@ -41,7 +41,7 @@ func (r *ruleEngine) dispatchNotification(values []int) bool {
 		return true
 	}
 
-	// If battery fully frained (0%) and not yet been notified, then enable dispatching
+	// If battery fully drained (0%) and not yet been notified, then enable dispatching
 	if t == trend.Downward && values[0] == 0 && !r.notifiedOnEmpty {
 		r.notifiedOnFull = false
 		r.notifiedOnEmpty = true
