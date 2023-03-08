@@ -19,7 +19,7 @@ type notificationEngine struct {
 	dispatcher          MessageDispatcher
 	notificationChannel <-chan []*sonnenbatterie.Status
 }
-
+s
 func NewDaemon(ctx context.Context, cfg *config.Config,
 	chn <-chan []*sonnenbatterie.Status, dispatcher MessageDispatcher) *notificationEngine {
 
