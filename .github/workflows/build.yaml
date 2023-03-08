@@ -1,0 +1,19 @@
+name: BUILD
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install go
+        uses: actions/setup-go@v2
+      - name: download dependencies
+        run: |
+          go version
+          go mod download
+      - name: build binaries
+        run: make build
+      - name: run tests
+        run: make test
