@@ -35,7 +35,7 @@ func NewDaemon(ctx context.Context, cfg *config.Config,
 }
 
 func (n *notificationEngine) start() {
-	rulesEngine := newRulesEngine()
+	rulesEngine := NewRulesEngine()
 	go func() {
 		for {
 			select {

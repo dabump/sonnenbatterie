@@ -19,7 +19,7 @@ type ruleEngine struct {
 	lastNotificationTrend trend.Trend
 }
 
-func newRulesEngine() *ruleEngine {
+func NewRulesEngine() *ruleEngine {
 	return &ruleEngine{
 		notifiedOnFull:  false,
 		notifiedOnEmpty: false,
