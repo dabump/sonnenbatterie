@@ -1,4 +1,3 @@
-//go:generate mockgen -source=client.go -destination=../../test/mocks/httpclient.go -package=mocks
 package sonnenbatterie
 
 import (
@@ -10,7 +9,8 @@ import (
 	"github.com/dabump/sonnenbatterie/internal/config"
 )
 
-type HttpClient interface {
+//go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=client.go -destination=../../test/mocks/httpclient.go -package=mocks
+type HttpClient interface { 
 	Do(req *http.Request) (*http.Response, error)
 }
 
@@ -23,8 +23,12 @@ func NewClient(httpClient HttpClient, config *config.Config) *Client {
 
 func (c *Client) GetStatus() (*Status, error) {
 
-	request, _ := http.NewRequest(http.MethodGet, fmt.Sprint(c.config.SonnenBatterieProtocolScheme,
+	request, err := http.NewRequest(http.MethodGet, fmt.Sprint(c.config.SonnenBatterieProtocolScheme,
 		"://", c.config.SonnenBatterieIP, c.config.SonnenBatterieStatusPath), nil)
+	if err != nil {
+		return nil, err
+	}
+
 	response, err := c.httpClient.Do(request)
 	if err != nil {
 		return nil, err
