@@ -1,4 +1,6 @@
 # Sonnenbatterie trend notification
+
+![build workflow](https://github.com/dabump/sonnenbatterie/actions/workflows/build.yaml/badge.svg)
 ## Background
 If you are the owner of a Sonnen battery in your house, there is a good chance that the battery
 will be connected to your home network, with a local IP, that can be used to obtain status info.
