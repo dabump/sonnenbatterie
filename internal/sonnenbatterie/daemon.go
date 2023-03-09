@@ -2,10 +2,10 @@ package sonnenbatterie
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/dabump/sonnenbatterie/internal/config"
+	"github.com/dabump/sonnenbatterie/internal/logger"
 	"github.com/dabump/sonnenbatterie/internal/queue"
 )
 
@@ -51,14 +51,14 @@ func (d *Daemon) start() {
 		for {
 			select {
 			case <-d.ctx.Done():
-				fmt.Print("sonnen batterie daemon stopped\n")
+				logger.LoggerFromContext(d.ctx).Info("sonnen batterie daemon stopped")
 				return
 			case <-ticker.C:
 				if d.lastStatusCheck.Add(pollingTime).Before(time.Now()) {
 					d.lastStatusCheck = time.Now()
 					status, err := d.sonnenClient.GetStatus()
 					if err != nil {
-						fmt.Printf("error during communication to sonnen batterie: %v\n", err)
+						logger.LoggerFromContext(d.ctx).Errorf("error during communication to sonnen batterie: %v", err)
 						continue
 					}
 

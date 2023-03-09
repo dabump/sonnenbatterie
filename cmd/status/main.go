@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -9,11 +10,15 @@ import (
 	"time"
 
 	"github.com/dabump/sonnenbatterie/internal/config"
+	"github.com/dabump/sonnenbatterie/internal/logger"
 	"github.com/dabump/sonnenbatterie/internal/sonnenbatterie"
 )
 
 func main() {
-	cfg := config.LoadConfig()
+	ctx := context.Background()
+	ctx = logger.NewLoggerWithContext(ctx)
+
+	cfg := config.LoadConfig(ctx)
 
 	client := http.Client{
 		Timeout: time.Duration(cfg.HttpTimeoutInMinutes) * time.Minute,
@@ -22,10 +27,10 @@ func main() {
 		},
 	}
 
-	sonnenBatterieClient := sonnenbatterie.NewClient(&client, cfg)
+	sonnenBatterieClient := sonnenbatterie.NewClient(ctx, &client, cfg)
 	status, err := sonnenBatterieClient.GetStatus()
 	if err != nil {
-		fmt.Printf("error: %v\n", err)
+		logger.LoggerFromContext(ctx).Errorf("error: %v", err)
 		os.Exit(1)
 	}
 	ms, _ := json.MarshalIndent(status, "", " ")

@@ -1,6 +1,7 @@
 package sonnenbatterie
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,8 +15,9 @@ type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-func NewClient(httpClient HttpClient, config *config.Config) *Client {
+func NewClient(ctx context.Context, httpClient HttpClient, config *config.Config) *Client {
 	return &Client{
+		ctx:        ctx,
 		config:     config,
 		httpClient: httpClient,
 	}

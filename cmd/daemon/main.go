@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,16 +11,20 @@ import (
 
 	"github.com/dabump/sonnenbatterie/internal/config"
 	"github.com/dabump/sonnenbatterie/internal/dispatch"
+	"github.com/dabump/sonnenbatterie/internal/logger"
 	"github.com/dabump/sonnenbatterie/internal/notification"
 	"github.com/dabump/sonnenbatterie/internal/sonnenbatterie"
 )
 
 func main() {
-	cfg := config.LoadConfig()
+	ctx, cancel := context.WithCancel(context.Background())
+	ctx = logger.NewLoggerWithContext(ctx)
+
+	cfg := config.LoadConfig(ctx)
 	shottrDispatcher := dispatch.NewShoutrrrDispatcher(cfg)
 	err := shottrDispatcher.Send("sonnenbatterie daemon started")
 	if len(err) >= 1 && err[0] != nil {
-		fmt.Printf("could not invoke notification dispatcher err: %v\n", err)
+		logger.LoggerFromContext(ctx).Errorf("could not invoke notification dispatcher err: %v", err)
 	}
 
 	client := http.Client{
@@ -30,9 +33,8 @@ func main() {
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		},
 	}
-	sonnenClient := sonnenbatterie.NewClient(&client, cfg)
+	sonnenClient := sonnenbatterie.NewClient(ctx, &client, cfg)
 
-	ctx, cancel := context.WithCancel(context.Background())
 	notificationChannel := make(chan []*sonnenbatterie.Status)
 
 	sonnenbatterie.NewDeamon(ctx, sonnenClient, cfg, notificationChannel)
@@ -43,7 +45,8 @@ func main() {
 	<-sigs
 
 	cancel()
-	fmt.Print("sonnen batterie deamon stopping...\n")
+
+	logger.LoggerFromContext(ctx).Info("sonnen batterie deamon stopping")
 	shottrDispatcher.Send("sonnenbatterie daemon stopped")
 	time.Sleep(2 * time.Second)
 }

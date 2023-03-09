@@ -1,9 +1,10 @@
 package notification
 
 import (
-	"fmt"
+	"context"
 	"time"
 
+	"github.com/dabump/sonnenbatterie/internal/logger"
 	"github.com/dabump/sonnenbatterie/internal/trend"
 )
 
@@ -16,13 +17,15 @@ type ruleEngine struct {
 	notifiedOnFull        bool
 	notifiedOnEmpty       bool
 	lastReset             time.Time
+	ctx                   context.Context
 	lastNotificationTrend trend.Trend
 }
 
-func NewRulesEngine() *ruleEngine {
+func NewRulesEngine(ctx context.Context) *ruleEngine {
 	return &ruleEngine{
 		notifiedOnFull:  false,
 		notifiedOnEmpty: false,
+		ctx:             ctx,
 		lastReset:       time.Now(),
 	}
 }
@@ -30,7 +33,7 @@ func NewRulesEngine() *ruleEngine {
 func (r *ruleEngine) dispatchNotification(values []int) bool {
 	// Determine initial trend
 	t := trend.Calculate(values)
-	fmt.Printf("trend: %v - %v%% \n", t, values[0])
+	logger.LoggerFromContext(r.ctx).Infof("trend: %v - %v%%", t, values[0])
 
 	if has24HoursPassed(r.lastReset) {
 		r.lastReset = time.Now()

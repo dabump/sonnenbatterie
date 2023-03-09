@@ -1,11 +1,14 @@
 package sonnenbatterie
 
 import (
+	"context"
+
 	"github.com/dabump/sonnenbatterie/internal/config"
 )
 
 type Client struct {
 	httpClient HttpClient
+	ctx        context.Context
 	config     *config.Config
 }
 type Status struct {

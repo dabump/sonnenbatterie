@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dabump/sonnenbatterie/internal/config"
+	"github.com/dabump/sonnenbatterie/internal/logger"
 	"github.com/dabump/sonnenbatterie/internal/sonnenbatterie"
 	"github.com/dabump/sonnenbatterie/internal/trend"
 )
@@ -35,12 +36,12 @@ func NewDaemon(ctx context.Context, cfg *config.Config,
 }
 
 func (n *notificationEngine) start() {
-	rulesEngine := NewRulesEngine()
+	rulesEngine := NewRulesEngine(n.context)
 	go func() {
 		for {
 			select {
 			case <-n.context.Done():
-				fmt.Print("notification engine stopped\n")
+				logger.LoggerFromContext(n.context).Info("notification engine stopped")
 				return
 			case event := <-n.notificationChannel:
 
@@ -57,10 +58,10 @@ func (n *notificationEngine) start() {
 					} else {
 						message = fmt.Sprintf("sonnenbatterie at %v%% with %s trend", values[0], trend.Calculate(values))
 					}
-					fmt.Printf("message: %v\n", message)
+					logger.LoggerFromContext(n.context).Infof("message: %v", message)
 					err := n.dispatcher.Send(message)
 					if err != nil {
-						fmt.Printf("err: %v\n", err)
+						logger.LoggerFromContext(n.context).Errorf("err: %v", err)
 					}
 				}
 			}

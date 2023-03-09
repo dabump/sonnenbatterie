@@ -1,9 +1,12 @@
 package config
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"github.com/dabump/sonnenbatterie/internal/logger"
 )
 
 const (
@@ -37,19 +40,19 @@ func readConfigFile(fileName string, fn reader) (*Config, error) {
 	return &cfg, nil
 }
 
-func LoadConfig() *Config {
+func LoadConfig(ctx context.Context) *Config {
 	args := os.Args[1:]
 	if len(args) >= 1 {
 		cfg, err := readConfigFile(args[0], os.ReadFile)
 		if err != nil {
-			fmt.Printf("config file not located %s\n", args[0])
+			logger.LoggerFromContext(ctx).Errorf("config file not located %s", args[0])
 			panic(err)
 		}
 		return cfg
 	} else {
 		cfg, err := readConfigFile(defaultConfigFile, os.ReadFile)
 		if err != nil {
-			fmt.Printf("default config file not located ./%s\n", defaultConfigFile)
+			logger.LoggerFromContext(ctx).Errorf("default config file not located ./%s", defaultConfigFile)
 			panic(err)
 		}
 		return cfg
