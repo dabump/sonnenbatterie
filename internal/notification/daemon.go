@@ -21,8 +21,8 @@ type notificationEngine struct {
 }
 
 func NewDaemon(ctx context.Context, cfg *config.Config,
-	chn <-chan []*sonnenbatterie.Status, dispatcher MessageDispatcher) *notificationEngine {
-
+	chn <-chan []*sonnenbatterie.Status, dispatcher MessageDispatcher,
+) *notificationEngine {
 	ne := notificationEngine{
 		config:              cfg,
 		context:             ctx,

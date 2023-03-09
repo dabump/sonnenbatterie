@@ -66,7 +66,6 @@ func (r *ruleEngine) dispatchNotification(values []int) bool {
 	}
 
 	return false
-
 }
 
 func has24HoursPassed(lastChecked time.Time) bool {

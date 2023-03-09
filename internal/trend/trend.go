@@ -9,7 +9,6 @@ const (
 )
 
 func Calculate(values []int) Trend {
-
 	if len(values) == 0 {
 		return NoTrend
 	}

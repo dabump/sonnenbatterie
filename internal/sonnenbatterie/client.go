@@ -10,7 +10,7 @@ import (
 )
 
 //go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=client.go -destination=../../test/mocks/httpclient.go -package=mocks
-type HttpClient interface { 
+type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
@@ -22,7 +22,6 @@ func NewClient(httpClient HttpClient, config *config.Config) *Client {
 }
 
 func (c *Client) GetStatus() (*Status, error) {
-
 	request, err := http.NewRequest(http.MethodGet, fmt.Sprint(c.config.SonnenBatterieProtocolScheme,
 		"://", c.config.SonnenBatterieIP, c.config.SonnenBatterieStatusPath), nil)
 	if err != nil {

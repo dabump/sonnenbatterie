@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	reverseLimitQueueSize = 30
+	reverseLimitQueueSize                    = 30
 	defaultTickerTimeInSecords time.Duration = 2 * time.Second
 )
 
@@ -28,8 +28,8 @@ type Daemon struct {
 }
 
 func NewDeamon(ctx context.Context, sonnenClient SonnenClient,
-	config *config.Config, notificationChannel chan []*Status) *Daemon {
-
+	config *config.Config, notificationChannel chan []*Status,
+) *Daemon {
 	daemon := Daemon{
 		ctx:                 ctx,
 		config:              config,

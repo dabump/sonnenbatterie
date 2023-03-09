@@ -22,9 +22,9 @@ func newSentientHttpClientMock(t *testing.T) HttpClient {
 	// -- Successful
 	successfulBody := "{\"Apparent_output\":240,\"BackupBuffer\":\"0\",\"BatteryCharging\":false,\"BatteryDischarging\":false,\"Consumption_Avg\":565,\"Consumption_W\":560,\"Fac\":50.0099983215332,\"FlowConsumptionBattery\":false,\"FlowConsumptionGrid\":false,\"FlowConsumptionProduction\":true,\"FlowGridBattery\":false,\"FlowProductionBattery\":false,\"FlowProductionGrid\":true,\"GridFeedIn_W\":1960,\"IsSystemInstalled\":1,\"OperatingMode\":\"2\",\"Pac_total_W\":-5,\"Production_W\":2525,\"RSOC\":100,\"RemainingCapacity_Wh\":8283,\"Sac1\":80,\"Sac2\":80,\"Sac3\":79,\"SystemStatus\":\"OnGrid\",\"Timestamp\":\"2023-03-01 15:02:45\",\"USOC\":100,\"Uac\":243,\"Ubat\":55,\"dischargeNotAllowed\":false,\"generator_autostart\":false}"
 	successfulRequest, _ := http.NewRequest(http.MethodGet, "http://192.168.2.101/the/successful/path", nil)
-	successfulReponse := http.Response {
+	successfulReponse := http.Response{
 		StatusCode: 200,
-		Body: io.NopCloser(strings.NewReader(successfulBody)),
+		Body:       io.NopCloser(strings.NewReader(successfulBody)),
 	}
 	mockClient.EXPECT().
 		Do(gomock.Eq(successfulRequest)).
@@ -34,9 +34,9 @@ func newSentientHttpClientMock(t *testing.T) HttpClient {
 	// -- Uncuccessful - 500
 	unSuccessful5xxBody := "{\"error\":\"error occured\"}"
 	unSuccessful5xxRequest, _ := http.NewRequest(http.MethodGet, "http://192.168.2.101/the/unsuccessful-500/path", nil)
-	unSuccessful5xxReponse := http.Response {
+	unSuccessful5xxReponse := http.Response{
 		StatusCode: 501,
-		Body: io.NopCloser(strings.NewReader(unSuccessful5xxBody)),
+		Body:       io.NopCloser(strings.NewReader(unSuccessful5xxBody)),
 	}
 	mockClient.EXPECT().
 		Do(gomock.Eq(unSuccessful5xxRequest)).
@@ -103,36 +103,36 @@ func TestClient_GetStatus(t *testing.T) {
 			},
 			wantErr: false,
 			want: &Status{
-				ApparentOutput: 240,
-				BackupBuffer: "0",
-				BatteryCharging: false,
-				BatteryDischarging: false,
-				ConsumptionAvg: 565,
-				ConsumptionW: 560,
-				Fac: 50.0099983215332,
-				FlowConsumptionBattery: false,
-				FlowConsumptionGrid: false,
+				ApparentOutput:            240,
+				BackupBuffer:              "0",
+				BatteryCharging:           false,
+				BatteryDischarging:        false,
+				ConsumptionAvg:            565,
+				ConsumptionW:              560,
+				Fac:                       50.0099983215332,
+				FlowConsumptionBattery:    false,
+				FlowConsumptionGrid:       false,
 				FlowConsumptionProduction: true,
-				FlowGridBattery: false,
-				FlowProductionBattery: false,
-				FlowProductionGrid: true,
-				GridFeedInW: 1960,
-				IsSystemInstalled: 1,
-				OperatingMode: "2",
-				PacTotalW: -5,
-				ProductionW: 2525,
-				Rsoc: 100,
-				RemainingCapacityWh: 8283,
-				Sac1: 80,
-				Sac2: 80,
-				Sac3: 79,
-				SystemStatus: "OnGrid",
-				Timestamp: "2023-03-01 15:02:45",
-				Usoc: 100,
-				Uac: 243,
-				Ubat: 55,
-				DischargeNotAllowed: false,
-				GeneratorAutostart: false,
+				FlowGridBattery:           false,
+				FlowProductionBattery:     false,
+				FlowProductionGrid:        true,
+				GridFeedInW:               1960,
+				IsSystemInstalled:         1,
+				OperatingMode:             "2",
+				PacTotalW:                 -5,
+				ProductionW:               2525,
+				Rsoc:                      100,
+				RemainingCapacityWh:       8283,
+				Sac1:                      80,
+				Sac2:                      80,
+				Sac3:                      79,
+				SystemStatus:              "OnGrid",
+				Timestamp:                 "2023-03-01 15:02:45",
+				Usoc:                      100,
+				Uac:                       243,
+				Ubat:                      55,
+				DischargeNotAllowed:       false,
+				GeneratorAutostart:        false,
 			},
 		},
 	}

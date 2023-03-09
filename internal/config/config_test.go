@@ -28,11 +28,11 @@ func TestReadConfigFile(t *testing.T) {
 			},
 			wantErr: false,
 			want: &Config{
-				SonnenBatterieIP: "192.168.0.0",
-				SonnenBatterieStatusPath: "/the/path/to/status",
-				SonnenBatterieProtocolScheme: "http",
+				SonnenBatterieIP:                "192.168.0.0",
+				SonnenBatterieStatusPath:        "/the/path/to/status",
+				SonnenBatterieProtocolScheme:    "http",
 				SonnenBatteriePollingTimeInMins: 3,
-				HttpTimeoutInMinutes: 2,
+				HttpTimeoutInMinutes:            2,
 			},
 		},
 		{
@@ -72,11 +72,11 @@ func TestReadConfigFile(t *testing.T) {
 
 func createValidConfigBytes() []byte {
 	cfg := Config{
-		SonnenBatterieIP: "192.168.0.0",
-		SonnenBatterieStatusPath: "/the/path/to/status",
-		SonnenBatterieProtocolScheme: "http",
+		SonnenBatterieIP:                "192.168.0.0",
+		SonnenBatterieStatusPath:        "/the/path/to/status",
+		SonnenBatterieProtocolScheme:    "http",
 		SonnenBatteriePollingTimeInMins: 3,
-		HttpTimeoutInMinutes: 2,
+		HttpTimeoutInMinutes:            2,
 	}
 	bytes, _ := json.Marshal(cfg)
 	return bytes
