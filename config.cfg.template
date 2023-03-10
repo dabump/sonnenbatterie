@@ -1,8 +1,9 @@
 {
-    "ipAddress": "192.168.0.2",
-    "statusPath": "/api/v2/status",
-    "protocolScheme": "http",
-    "timeoutInMinutes": 1,
+    "ipAddress":            "192.168.0.2",
+    "statusPath":           "/api/v2/status",
+    "protocolScheme":       "http",
+    "timeoutInMinutes":     1,
     "pollingTimeInMinutes": 1,
-    "shoutrrrUrl": ""
+    "shoutrrrUrl":          "",
+    "httpServerPort":       8888
 }

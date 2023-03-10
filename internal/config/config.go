@@ -21,6 +21,7 @@ type Config struct {
 
 	ShoutrrrURL          string `json:"shoutrrrUrl"`
 	HttpTimeoutInMinutes uint   `json:"timeoutInMinutes"`
+	HttpServerPort       uint   `json:"httpServerPort"`
 }
 
 type reader func(name string) ([]byte, error)
