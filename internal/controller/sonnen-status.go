@@ -11,7 +11,7 @@ import (
 	"github.com/dabump/sonnenbatterie/internal/sonnenbatterie"
 )
 
-type T struct {
+type sbs struct {
 	cfg        *config.Config
 	ctx        context.Context
 	httpClient http.Client
@@ -25,15 +25,15 @@ func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, stri
 		},
 	}
 
-	t := T{
+	sbs := sbs{
 		cfg:        cfg,
 		ctx:        ctx,
 		httpClient: client,
 	}
-	return http.MethodGet, "/", t.sonmnenBatterieController
+	return http.MethodGet, "/", sbs.sonmnenBatterieController
 }
 
-func (t *T) sonmnenBatterieController(resp http.ResponseWriter, req *http.Request) {
+func (t *sbs) sonmnenBatterieController(resp http.ResponseWriter, req *http.Request) {
 	cl := sonnenbatterie.NewClient(t.ctx, &t.httpClient, t.cfg)
 	status, err := cl.GetStatus()
 	if err != nil {
