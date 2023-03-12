@@ -25,7 +25,7 @@ func main() {
 	cfg := config.LoadConfig(ctx)
 	shottrDispatcher := dispatch.NewShoutrrrDispatcher(cfg)
 	err := shottrDispatcher.Send("sonnenbatterie daemon started")
-	if len(err) >= 1 && err[0] != nil {
+	if err != nil {
 		logger.LoggerFromContext(ctx).Errorf("could not invoke notification dispatcher err: %v", err)
 	}
 
