@@ -12,9 +12,9 @@ import (
 )
 
 type sbs struct {
-	cfg        *config.Config
-	ctx        context.Context
-	httpClient http.Client
+	cfg      *config.Config
+	ctx      context.Context
+	sbClient sonnenbatterie.SonnenClient
 }
 
 func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, string, http.HandlerFunc) {
@@ -24,18 +24,18 @@ func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, stri
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		},
 	}
+	sbClient := sonnenbatterie.NewClient(ctx, &client, cfg)
 
 	sbs := sbs{
-		cfg:        cfg,
-		ctx:        ctx,
-		httpClient: client,
+		cfg:      cfg,
+		ctx:      ctx,
+		sbClient: sbClient,
 	}
 	return http.MethodGet, "/", sbs.sonmnenBatterieController
 }
 
 func (t *sbs) sonmnenBatterieController(resp http.ResponseWriter, req *http.Request) {
-	cl := sonnenbatterie.NewClient(t.ctx, &t.httpClient, t.cfg)
-	status, err := cl.GetStatus()
+	status, err := t.sbClient.GetStatus()
 	if err != nil {
 		internalServerError(resp, err)
 		return
