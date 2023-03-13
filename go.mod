@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/containrrr/shoutrrr v0.7.1
+	github.com/dabump/tokenbucket v1.0.1
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/golang/mock v1.6.0
 	github.com/stretchr/testify v1.8.2

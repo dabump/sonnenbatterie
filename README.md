@@ -23,6 +23,11 @@ process of my Tesla to avoid running the risk using grid power (ie, paying for e
 4.1 Docker: `make docker`
 4.2 GO: `go run cmd/daemon/main.go`
 
+## HTTP API endpoint
+Two HTTP API endpoints are available for default configured port `8881` (port value can be changed
+via the confguration file). Default rate limit set to 1 per second request to sonnen batterie
+ - `http://host:8881/` <- Returns the json payload directly from the sonnen batterie
+ - `http://host:8881/status` <- returns `200 OK` when service up and accepting traffic
 ## Shoutrrr?
 Instead of building custom / bespoke notification logic, using Shoutrrr allows more range of
 notification services to be used (example, slack, telegram, email, ms teams, etc)
