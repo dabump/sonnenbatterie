@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -45,7 +46,7 @@ func main() {
 	rtr := router.New(ctx, cfg)
 	rtr.AddController(controller.ServiceStatus)
 	rtr.AddController(controller.SonnenBatterieStatus)
-	rtr.ListenAndServe(":8888")
+	rtr.ListenAndServe(":" + fmt.Sprint(cfg.HttpServerPort))
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)

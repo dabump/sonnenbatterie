@@ -70,8 +70,8 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 					err:    fmt.Errorf("somethingWentWrong"),
 				},
 			},
-			wantErr:    false,
-			statusCode: http.StatusInternalServerError,
+			wantErr:           false,
+			statusCode:        http.StatusInternalServerError,
 			contentTypeHeader: "application/text",
 		},
 	}
