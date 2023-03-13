@@ -6,3 +6,14 @@ import "net/http"
 type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
+
+func InternalServerError(resp http.ResponseWriter, err error) {
+	resp.Header().Set("Content-Type", "application/text")
+	resp.WriteHeader(http.StatusInternalServerError)
+	resp.Write([]byte(err.Error()))
+}
+
+func TooManyRequests(resp http.ResponseWriter) {
+	resp.Header().Set("Content-Type", "application/text")
+	resp.WriteHeader(http.StatusTooManyRequests)
+}

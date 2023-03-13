@@ -7,14 +7,25 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
 	"github.com/dabump/sonnenbatterie/internal/sonnenbatterie"
+	"github.com/dabump/tokenbucket"
 )
 
+const (
+	ratePerSecondLimit = 1
+)
+
+type RateLimiter interface {
+	Hit() bool
+}
+
 type sbs struct {
-	cfg      *config.Config
-	ctx      context.Context
-	sbClient sonnenbatterie.SonnenClient
+	cfg         *config.Config
+	ctx         context.Context
+	sbClient    sonnenbatterie.SonnenClient
+	tokenBucket RateLimiter
 }
 
 func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, string, http.HandlerFunc) {
@@ -26,34 +37,39 @@ func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, stri
 	}
 	sbClient := sonnenbatterie.NewClient(ctx, &client, cfg)
 
+	tokenBucket := tokenbucket.NewBucket("sonnen-status", ratePerSecondLimit)
+	tokenBucketDaemon := tokenbucket.NewDaemon(tokenBucket, tokenbucket.NA)
+	tokenBucketDaemon.Start()
+
 	sbs := sbs{
-		cfg:      cfg,
-		ctx:      ctx,
-		sbClient: sbClient,
+		cfg:         cfg,
+		ctx:         ctx,
+		sbClient:    sbClient,
+		tokenBucket: tokenBucketDaemon,
 	}
 	return http.MethodGet, "/", sbs.sonmnenBatterieController
 }
 
 func (t *sbs) sonmnenBatterieController(resp http.ResponseWriter, req *http.Request) {
+	hit := t.tokenBucket.Hit()
+	if !hit {
+		common.TooManyRequests(resp)
+		return
+	}
+
 	status, err := t.sbClient.GetStatus()
 	if err != nil {
-		internalServerError(resp, err)
+		common.InternalServerError(resp, err)
 		return
 	}
 
 	pj, err := json.Marshal(status)
 	if err != nil {
-		internalServerError(resp, err)
+		common.InternalServerError(resp, err)
 		return
 	}
 
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusOK)
 	resp.Write([]byte(pj))
-}
-
-func internalServerError(resp http.ResponseWriter, err error) {
-	resp.Header().Set("Content-Type", "application/text")
-	resp.WriteHeader(http.StatusInternalServerError)
-	resp.Write([]byte(err.Error()))
 }
