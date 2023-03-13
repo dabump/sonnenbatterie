@@ -12,7 +12,7 @@ test: ## Run all tests
 
 docker: ## Build docker container & start
 	@${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
-	${DOCKER_BIN} run --rm -d --name sonnenbatterie-daemon sonnenbatterie/daemon
+	${DOCKER_BIN} run --rm -d -p 8881:8881 --name sonnenbatterie-daemon sonnenbatterie/daemon
 
 generate: ## Generate mocks
 	@go generate ./...

@@ -16,7 +16,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	ctx = logger.NewLoggerWithContext(ctx)
+	ctx = logger.NewContextLogger(ctx)
 
 	cfg := config.LoadConfig(ctx)
 

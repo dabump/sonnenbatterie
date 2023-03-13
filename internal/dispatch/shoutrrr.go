@@ -18,7 +18,10 @@ func NewShoutrrrDispatcher(cfg *config.Config) *shoutrrrDispatcher {
 	}
 }
 
-func (s *shoutrrrDispatcher) Send(message string) []error {
+func (s *shoutrrrDispatcher) Send(message string) error {
 	err := s.sender.Send(message, &types.Params{})
-	return err
+	if err != nil && err[0] != nil {
+		return err[0]
+	}
+	return nil
 }

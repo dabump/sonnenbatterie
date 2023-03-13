@@ -21,4 +21,6 @@ RUN cp /build/main .
 
 RUN cp /build/config.cfg .
 
+EXPOSE 8881/tcp
+
 CMD ["/dist/main"]

@@ -11,7 +11,7 @@ import (
 )
 
 type MessageDispatcher interface {
-	Send(message string) []error
+	Send(message string) error
 }
 
 type notificationEngine struct {

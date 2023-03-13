@@ -3,11 +3,12 @@ package sonnenbatterie
 import (
 	"context"
 
+	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
 )
 
 type Client struct {
-	httpClient HttpClient
+	httpClient common.HttpClient
 	ctx        context.Context
 	config     *config.Config
 }

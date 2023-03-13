@@ -10,11 +10,12 @@ import (
 
 	"github.com/golang/mock/gomock"
 
+	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
 	"github.com/dabump/sonnenbatterie/test/mocks"
 )
 
-func newSentientHttpClientMock(t *testing.T) HttpClient {
+func newSentientHttpClientMock(t *testing.T) common.HttpClient {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	mockClient := mocks.NewMockHttpClient(ctrl)
@@ -55,7 +56,7 @@ func newSentientHttpClientMock(t *testing.T) HttpClient {
 func TestClient_GetStatus(t *testing.T) {
 	sentientHttpClientMock := newSentientHttpClientMock(t)
 	type fields struct {
-		httpClient HttpClient
+		httpClient common.HttpClient
 		config     *config.Config
 	}
 	tests := []struct {

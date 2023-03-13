@@ -7,15 +7,11 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
 )
 
-//go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=client.go -destination=../../test/mocks/httpclient.go -package=mocks
-type HttpClient interface {
-	Do(req *http.Request) (*http.Response, error)
-}
-
-func NewClient(ctx context.Context, httpClient HttpClient, config *config.Config) *Client {
+func NewClient(ctx context.Context, httpClient common.HttpClient, config *config.Config) *Client {
 	return &Client{
 		ctx:        ctx,
 		config:     config,
