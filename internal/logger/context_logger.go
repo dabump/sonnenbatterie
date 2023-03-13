@@ -16,14 +16,6 @@ type contextLogger struct {
 	zapLogger *zap.SugaredLogger
 }
 
-func newLogger() *contextLogger {
-	zapLogger, _ := zap.NewProduction()
-
-	return &contextLogger{
-		zapLogger: zapLogger.Sugar(),
-	}
-}
-
 func NewContextLogger(ctx context.Context) context.Context {
 	return context.WithValue(ctx, loggerID, newLogger())
 }
@@ -34,6 +26,14 @@ func LoggerFromContext(ctx context.Context) *contextLogger {
 	}
 	ctxLogger := ctx.Value(loggerID).(*contextLogger)
 	return ctxLogger
+}
+
+func newLogger() *contextLogger {
+	zapLogger, _ := zap.NewProduction()
+
+	return &contextLogger{
+		zapLogger: zapLogger.Sugar(),
+	}
 }
 
 func (c *contextLogger) Info(args ...interface{}) {
