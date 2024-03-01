@@ -4,15 +4,14 @@ import (
 	"github.com/containrrr/shoutrrr"
 	"github.com/containrrr/shoutrrr/pkg/router"
 	"github.com/containrrr/shoutrrr/pkg/types"
-	"github.com/dabump/sonnenbatterie/internal/config"
 )
 
 type shoutrrrDispatcher struct {
 	sender *router.ServiceRouter
 }
 
-func NewShoutrrrDispatcher(cfg *config.Config) *shoutrrrDispatcher {
-	router, _ := shoutrrr.CreateSender(cfg.ShoutrrrURL)
+func NewShoutrrrDispatcher(shoutrrrUrl string) *shoutrrrDispatcher {
+	router, _ := shoutrrr.CreateSender(shoutrrrUrl)
 	return &shoutrrrDispatcher{
 		sender: router,
 	}

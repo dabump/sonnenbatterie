@@ -24,7 +24,13 @@ func main() {
 	ctx = logger.NewContextLogger(ctx)
 
 	cfg := config.LoadConfig(ctx)
-	shottrDispatcher := dispatch.NewShoutrrrDispatcher(cfg)
+
+	dispatchers := make([]notification.MessageDispatcher, len(cfg.ShoutrrrURLs))
+	for index, url := range cfg.ShoutrrrURLs {
+		dispatchers[index] = dispatch.NewShoutrrrDispatcher(url)
+	}
+
+	shottrDispatcher := dispatch.NewShoutrrrDispatcher(cfg.ShoutrrrURLs[0])
 	err := shottrDispatcher.Send("sonnenbatterie daemon started")
 	if err != nil {
 		logger.LoggerFromContext(ctx).Errorf("could not invoke notification dispatcher err: %v", err)
@@ -41,7 +47,7 @@ func main() {
 	notificationChannel := make(chan []*sonnenbatterie.Status)
 
 	sonnenbatterie.NewDeamon(ctx, sonnenClient, cfg, notificationChannel)
-	notification.NewDaemon(ctx, cfg, notificationChannel, shottrDispatcher)
+	notification.NewDaemon(ctx, cfg, notificationChannel, dispatchers)
 
 	rtr := router.New(ctx, cfg)
 	rtr.AddController(controller.ServiceStatus)

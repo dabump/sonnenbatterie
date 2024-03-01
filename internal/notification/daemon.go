@@ -17,17 +17,17 @@ type MessageDispatcher interface {
 type notificationEngine struct {
 	config              *config.Config
 	context             context.Context
-	dispatcher          MessageDispatcher
+	dispatchers         []MessageDispatcher
 	notificationChannel <-chan []*sonnenbatterie.Status
 }
 
 func NewDaemon(ctx context.Context, cfg *config.Config,
-	chn <-chan []*sonnenbatterie.Status, dispatcher MessageDispatcher,
+	chn <-chan []*sonnenbatterie.Status, dispatchers []MessageDispatcher,
 ) *notificationEngine {
 	ne := notificationEngine{
 		config:              cfg,
 		context:             ctx,
-		dispatcher:          dispatcher,
+		dispatchers:         dispatchers,
 		notificationChannel: chn,
 	}
 
@@ -59,9 +59,12 @@ func (n *notificationEngine) start() {
 						message = fmt.Sprintf("sonnenbatterie at %v%% with %s trend", values[0], trend.Calculate(values))
 					}
 					logger.LoggerFromContext(n.context).Infof("message: %v", message)
-					err := n.dispatcher.Send(message)
-					if err != nil {
-						logger.LoggerFromContext(n.context).Errorf("err: %v", err)
+
+					for _, dispatcher := range n.dispatchers {
+						err := dispatcher.Send(message)
+						if err != nil {
+							logger.LoggerFromContext(n.context).Errorf("err: %v", err)
+						}
 					}
 				}
 			}

@@ -33,6 +33,10 @@ func TestReadConfigFile(t *testing.T) {
 				SonnenBatterieProtocolScheme:    "http",
 				SonnenBatteriePollingTimeInMins: 3,
 				HttpTimeoutInMinutes:            2,
+				ShoutrrrURLs: []string{
+					"url1",
+					"url2",
+				},
 			},
 		},
 		{
@@ -77,6 +81,10 @@ func createValidConfigBytes() []byte {
 		SonnenBatterieProtocolScheme:    "http",
 		SonnenBatteriePollingTimeInMins: 3,
 		HttpTimeoutInMinutes:            2,
+		ShoutrrrURLs: []string{
+			"url1",
+			"url2",
+		},
 	}
 	bytes, _ := json.Marshal(cfg)
 	return bytes

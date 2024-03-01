@@ -4,6 +4,8 @@
     "protocolScheme":       "http",
     "timeoutInMinutes":     1,
     "pollingTimeInMinutes": 1,
-    "shoutrrrUrl":          "",
+    "shoutrrrUrls":          [
+        ""
+    ],
     "httpServerPort":       8888
 }
