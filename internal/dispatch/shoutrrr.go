@@ -7,20 +7,26 @@ import (
 )
 
 type shoutrrrDispatcher struct {
-	sender *router.ServiceRouter
+	senders []*router.ServiceRouter
 }
 
-func NewShoutrrrDispatcher(shoutrrrUrl string) *shoutrrrDispatcher {
-	router, _ := shoutrrr.CreateSender(shoutrrrUrl)
+func NewShoutrrrDispatcher(shoutrrrUrl ...string) *shoutrrrDispatcher {
+	senders := make([]*router.ServiceRouter, len(shoutrrrUrl))
+	for index, url := range shoutrrrUrl {
+		sender, _ := shoutrrr.CreateSender(url)
+		senders[index] = sender
+	}
 	return &shoutrrrDispatcher{
-		sender: router,
+		senders: senders,
 	}
 }
 
 func (s *shoutrrrDispatcher) Send(message string) error {
-	err := s.sender.Send(message, &types.Params{})
-	if err != nil && err[0] != nil {
-		return err[0]
+	for _, sender := range s.senders {
+		err := sender.Send(message, &types.Params{})
+		if err != nil && err[0] != nil {
+			return err[0]
+		}
 	}
 	return nil
 }
