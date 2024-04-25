@@ -14,7 +14,7 @@ docker: ## Build docker container & start
 	@${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
 	${DOCKER_BIN} run -d --restart=always -p 8881:8881 --name sonnenbatterie-daemon sonnenbatterie/daemon
 
-generate: ## Generate mocks
+generate-mocks: ## Generate mocks
 	@go generate ./...
 
 cover: ## Run test coverage suite
