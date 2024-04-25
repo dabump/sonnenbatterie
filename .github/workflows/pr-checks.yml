@@ -52,3 +52,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-tests
+          slug: dabump/sonnenbatterie
