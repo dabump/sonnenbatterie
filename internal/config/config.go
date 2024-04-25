@@ -35,7 +35,7 @@ func readConfigFile(fileName string, fn reader) (*Config, error) {
 
 	err = json.Unmarshal(b, &cfg)
 	if err != nil {
-		return nil, fmt.Errorf("error during unmarshalling of config file: %v", err)
+		return nil, fmt.Errorf("error during unmarshalling of config file: %w", err)
 	}
 
 	return &cfg, nil

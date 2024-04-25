@@ -1,7 +1,6 @@
 package sonnenbatterie
 
 import (
-	"context"
 
 	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
@@ -9,9 +8,9 @@ import (
 
 type Client struct {
 	httpClient common.HttpClient
-	ctx        context.Context
 	config     *config.Config
 }
+
 type Status struct {
 	ApparentOutput            int     `json:"Apparent_output,omitempty"`
 	BackupBuffer              string  `json:"BackupBuffer,omitempty"`

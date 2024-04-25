@@ -37,14 +37,14 @@ func main() {
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		},
 	}
-	sonnenClient := sonnenbatterie.NewClient(ctx, &client, cfg)
+	sonnenClient := sonnenbatterie.NewClient(&client, cfg)
 
 	notificationChannel := make(chan []*sonnenbatterie.Status)
 
 	sonnenbatterie.NewDeamon(ctx, sonnenClient, cfg, notificationChannel)
 	notification.NewDaemon(ctx, cfg, notificationChannel, shottrDispatcher)
 
-	rtr := router.New(ctx, cfg)
+	rtr := router.New(cfg)
 	rtr.AddController(controller.ServiceStatus)
 	rtr.AddController(controller.SonnenBatterieStatus)
 	rtr.ListenAndServe(":" + fmt.Sprint(cfg.HttpServerPort))
@@ -56,6 +56,9 @@ func main() {
 	cancel()
 
 	logger.LoggerFromContext(ctx).Info("sonnen batterie deamon stopping")
-	shottrDispatcher.Send("sonnenbatterie daemon stopped")
+	err = shottrDispatcher.Send("sonnenbatterie daemon stopped")
+	if err != nil {
+		logger.LoggerFromContext(ctx).Errorf("unable to send message via shottr: %w", err)
+	}
 	time.Sleep(2 * time.Second)
 }

@@ -1,6 +1,7 @@
 package sonnenbatterie
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -138,12 +139,13 @@ func TestClient_GetStatus(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		ctx := context.Background()
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				httpClient: tt.fields.httpClient,
 				config:     tt.fields.config,
 			}
-			got, err := c.GetStatus()
+			got, err := c.GetStatus(ctx)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Client.GetStatus() error = %v, wantErr %v", err, tt.wantErr)
 				return

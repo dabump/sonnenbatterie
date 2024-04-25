@@ -27,8 +27,8 @@ func main() {
 		},
 	}
 
-	sonnenBatterieClient := sonnenbatterie.NewClient(ctx, &client, cfg)
-	status, err := sonnenBatterieClient.GetStatus()
+	sonnenBatterieClient := sonnenbatterie.NewClient(&client, cfg)
+	status, err := sonnenBatterieClient.GetStatus(ctx)
 	if err != nil {
 		logger.LoggerFromContext(ctx).Errorf("error: %v", err)
 		os.Exit(1)

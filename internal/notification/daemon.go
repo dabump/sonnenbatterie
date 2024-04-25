@@ -16,7 +16,6 @@ type MessageDispatcher interface {
 
 type notificationEngine struct {
 	config              *config.Config
-	context             context.Context
 	dispatcher          MessageDispatcher
 	notificationChannel <-chan []*sonnenbatterie.Status
 }
@@ -26,22 +25,21 @@ func NewDaemon(ctx context.Context, cfg *config.Config,
 ) *notificationEngine {
 	ne := notificationEngine{
 		config:              cfg,
-		context:             ctx,
 		dispatcher:          dispatcher,
 		notificationChannel: chn,
 	}
 
-	ne.start()
+	ne.start(ctx)
 	return &ne
 }
 
-func (n *notificationEngine) start() {
-	rulesEngine := NewRulesEngine(n.context)
+func (n *notificationEngine) start(ctx context.Context) {
+	rulesEngine := NewRulesEngine()
 	go func() {
 		for {
 			select {
-			case <-n.context.Done():
-				logger.LoggerFromContext(n.context).Info("notification engine stopped")
+			case <-ctx.Done():
+				logger.LoggerFromContext(ctx).Info("notification engine stopped")
 				return
 			case event := <-n.notificationChannel:
 
@@ -49,7 +47,7 @@ func (n *notificationEngine) start() {
 				for _, s := range event {
 					values = append(values, s.Usoc)
 				}
-				if rulesEngine.dispatchNotification(values) {
+				if rulesEngine.dispatchNotification(ctx, values) {
 					var message string
 					if values[0] == 100 {
 						message = "sonnenbatterie fully charged"
@@ -58,11 +56,11 @@ func (n *notificationEngine) start() {
 					} else {
 						message = fmt.Sprintf("sonnenbatterie at %v%% with %s trend", values[0], trend.Calculate(values))
 					}
-					logger.LoggerFromContext(n.context).Infof("message: %v", message)
+					logger.LoggerFromContext(ctx).Infof("message: %v", message)
 
 					err := n.dispatcher.Send(message)
 					if err != nil {
-						logger.LoggerFromContext(n.context).Errorf("err: %v", err)
+						logger.LoggerFromContext(ctx).Errorf("err: %v", err)
 					}
 				}
 			}

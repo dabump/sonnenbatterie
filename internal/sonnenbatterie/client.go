@@ -11,16 +11,15 @@ import (
 	"github.com/dabump/sonnenbatterie/internal/config"
 )
 
-func NewClient(ctx context.Context, httpClient common.HttpClient, config *config.Config) *Client {
+func NewClient(httpClient common.HttpClient, config *config.Config) *Client {
 	return &Client{
-		ctx:        ctx,
 		config:     config,
 		httpClient: httpClient,
 	}
 }
 
-func (c *Client) GetStatus() (*Status, error) {
-	request, err := http.NewRequest(http.MethodGet, fmt.Sprint(c.config.SonnenBatterieProtocolScheme,
+func (c *Client) GetStatus(ctx context.Context) (*Status, error) {
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprint(c.config.SonnenBatterieProtocolScheme,
 		"://", c.config.SonnenBatterieIP, c.config.SonnenBatterieStatusPath), nil)
 	if err != nil {
 		return nil, err
