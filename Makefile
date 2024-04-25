@@ -7,8 +7,8 @@ DOCKER_BIN	:= podman
 default: help
 
 .PHONY: test
-test: ## Run all tests
-	@go clean --testcache && go test ./...
+unit-test: ## Run all tests
+	@go clean --testcache && go test ./... -v -coverprofile cover.out
 
 docker: ## Build docker container & start
 	@${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
