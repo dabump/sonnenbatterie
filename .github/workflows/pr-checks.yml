@@ -52,4 +52,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-tests
+          files: ./cover.out
           slug: dabump/sonnenbatterie
