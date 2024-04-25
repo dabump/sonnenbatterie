@@ -70,5 +70,5 @@ func (t *sbs) sonnenBatterieController(resp http.ResponseWriter, req *http.Reque
 
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusOK)
-	_,_ = resp.Write([]byte(pj))
+	_, _ = resp.Write([]byte(pj))
 }

@@ -1,7 +1,6 @@
 package sonnenbatterie
 
 import (
-
 	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
 )

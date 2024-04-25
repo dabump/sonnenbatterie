@@ -102,9 +102,10 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		ctx := context.Background()
 		t.Run(tt.name, func(t *testing.T) {
 			srv := httptest.NewServer(sbc(tt.fields.cfg, tt.fields.sbClient, tt.fields.rateLimiter))
-			request, _ := http.NewRequest(http.MethodGet, srv.URL + "/", nil)
+			request, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/", nil)
 			resp, err := srv.Client().Do(request)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Client.GetStatus() error = %v, wantErr %v", err, tt.wantErr)

@@ -13,5 +13,5 @@ func ServiceStatus(*config.Config) (string, string, http.HandlerFunc) {
 func statusController(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Content-Type", "application/text")
 	resp.WriteHeader(http.StatusOK)
-	_,_ = resp.Write([]byte("ok"))
+	_, _ = resp.Write([]byte("ok"))
 }

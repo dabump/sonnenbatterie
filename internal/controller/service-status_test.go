@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -20,8 +21,10 @@ func TestServiceStatus(t *testing.T) {
 }
 
 func TestServiceStatusHandler(t *testing.T) {
+	ctx := context.Background()
+	
 	srv := httptest.NewServer(schf())
-	request, _ := http.NewRequest(http.MethodGet, srv.URL + "/status", nil)
+	request, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/status", nil)
 	resp, err := srv.Client().Do(request)
 
 	assert.NoError(t, err)

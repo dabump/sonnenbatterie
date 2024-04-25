@@ -30,9 +30,7 @@ func (r *router) AddController(cf ControllerFn) {
 }
 
 func (r *router) ListenAndServe(address string) {
-
 	go func() {
 		_ = http.ListenAndServe(address, r.router)
 	}()
-
 }
