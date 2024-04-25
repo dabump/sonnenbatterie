@@ -9,11 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/golang/mock/gomock"
-
 	"github.com/dabump/sonnenbatterie/internal/common"
 	"github.com/dabump/sonnenbatterie/internal/config"
 	"github.com/dabump/sonnenbatterie/test/mocks"
+	"github.com/golang/mock/gomock"
 )
 
 func newSentientHttpClientMock(t *testing.T) common.HttpClient {

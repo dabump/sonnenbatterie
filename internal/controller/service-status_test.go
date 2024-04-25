@@ -22,7 +22,7 @@ func TestServiceStatus(t *testing.T) {
 
 func TestServiceStatusHandler(t *testing.T) {
 	ctx := context.Background()
-	
+
 	srv := httptest.NewServer(schf())
 	request, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/status", nil)
 	resp, err := srv.Client().Do(request)
