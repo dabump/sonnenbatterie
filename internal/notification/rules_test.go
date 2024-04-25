@@ -1,6 +1,7 @@
 package notification
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -130,6 +131,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		ctx := context.Background()
 		t.Run(tt.name, func(t *testing.T) {
 			r := &ruleEngine{
 				notifiedOnFull:        tt.fields.notifiedOnFull,
@@ -137,7 +139,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 				lastNotificationTrend: tt.fields.lastNotificationTrend,
 				lastReset:             tt.fields.lastReset,
 			}
-			if got := r.dispatchNotification(tt.args.values); got != tt.want {
+			if got := r.dispatchNotification(ctx, tt.args.values); got != tt.want {
 				t.Errorf("ruleEngine.dispatchNotification() = %v, want %v", got, tt.want)
 			}
 		})

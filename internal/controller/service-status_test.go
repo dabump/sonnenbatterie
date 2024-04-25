@@ -12,18 +12,20 @@ import (
 )
 
 func TestServiceStatus(t *testing.T) {
-	ctx := context.Background()
 	cfg := config.Config{}
 
-	method, uri, _ := ServiceStatus(ctx, &cfg)
+	method, uri, _ := ServiceStatus(&cfg)
 
 	assert.Equal(t, http.MethodGet, method)
 	assert.Equal(t, "/status", uri)
 }
 
 func TestServiceStatusHandler(t *testing.T) {
+	ctx := context.Background()
+
 	srv := httptest.NewServer(schf())
-	resp, err := srv.Client().Get(srv.URL + "/status")
+	request, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/status", nil)
+	resp, err := srv.Client().Do(request)
 
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)

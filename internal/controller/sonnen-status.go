@@ -23,19 +23,18 @@ type RateLimiter interface {
 
 type sbs struct {
 	cfg         *config.Config
-	ctx         context.Context
 	sbClient    sonnenbatterie.SonnenClient
 	tokenBucket RateLimiter
 }
 
-func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, string, http.HandlerFunc) {
+func SonnenBatterieStatus(cfg *config.Config) (string, string, http.HandlerFunc) {
 	client := http.Client{
 		Timeout: time.Duration(10 * time.Second),
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		},
 	}
-	sbClient := sonnenbatterie.NewClient(ctx, &client, cfg)
+	sbClient := sonnenbatterie.NewClient(&client, cfg)
 
 	tokenBucket := tokenbucket.NewBucket("sonnen-status", ratePerSecondLimit)
 	tokenBucketDaemon := tokenbucket.NewDaemon(tokenBucket, tokenbucket.NA)
@@ -43,21 +42,21 @@ func SonnenBatterieStatus(ctx context.Context, cfg *config.Config) (string, stri
 
 	sbs := sbs{
 		cfg:         cfg,
-		ctx:         ctx,
 		sbClient:    sbClient,
 		tokenBucket: tokenBucketDaemon,
 	}
-	return http.MethodGet, "/", sbs.sonmnenBatterieController
+	return http.MethodGet, "/", sbs.sonnenBatterieController
 }
 
-func (t *sbs) sonmnenBatterieController(resp http.ResponseWriter, req *http.Request) {
+func (t *sbs) sonnenBatterieController(resp http.ResponseWriter, req *http.Request) {
+	ctx := context.Background()
 	hit := t.tokenBucket.Hit()
 	if !hit {
 		common.TooManyRequests(resp)
 		return
 	}
 
-	status, err := t.sbClient.GetStatus()
+	status, err := t.sbClient.GetStatus(ctx)
 	if err != nil {
 		common.InternalServerError(resp, err)
 		return
@@ -71,5 +70,5 @@ func (t *sbs) sonmnenBatterieController(resp http.ResponseWriter, req *http.Requ
 
 	resp.Header().Set("Content-Type", "application/json")
 	resp.WriteHeader(http.StatusOK)
-	resp.Write([]byte(pj))
+	_, _ = resp.Write([]byte(pj))
 }

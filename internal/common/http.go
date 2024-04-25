@@ -10,7 +10,7 @@ type HttpClient interface {
 func InternalServerError(resp http.ResponseWriter, err error) {
 	resp.Header().Set("Content-Type", "application/text")
 	resp.WriteHeader(http.StatusInternalServerError)
-	resp.Write([]byte(err.Error()))
+	_, _ = resp.Write([]byte(err.Error()))
 }
 
 func TooManyRequests(resp http.ResponseWriter) {

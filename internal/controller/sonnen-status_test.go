@@ -13,10 +13,9 @@ import (
 )
 
 func TestSonnenBatterieStatus(t *testing.T) {
-	ctx := context.Background()
 	cfg := config.Config{}
 
-	method, uri, _ := SonnenBatterieStatus(ctx, &cfg)
+	method, uri, _ := SonnenBatterieStatus(&cfg)
 	assert.Equal(t, http.MethodGet, method)
 	assert.Equal(t, "/", uri)
 }
@@ -26,7 +25,7 @@ type MockSonnenBatterieClient struct {
 	err    error
 }
 
-func (m *MockSonnenBatterieClient) GetStatus() (*sonnenbatterie.Status, error) {
+func (m *MockSonnenBatterieClient) GetStatus(ctx context.Context) (*sonnenbatterie.Status, error) {
 	return &m.status, m.err
 }
 
@@ -39,12 +38,10 @@ func (m *MockRateLimiter) Hit() bool {
 }
 
 func Test_sbs_sonmnenBatterieController(t *testing.T) {
-	ctx := context.Background()
 	cfg := config.Config{}
 
 	type fields struct {
 		cfg         *config.Config
-		ctx         context.Context
 		sbClient    sonnenbatterie.SonnenClient
 		rateLimiter RateLimiter
 	}
@@ -59,7 +56,6 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 			name: "success-200-ok",
 			fields: fields{
 				cfg: &cfg,
-				ctx: ctx,
 				sbClient: &MockSonnenBatterieClient{
 					status: sonnenbatterie.Status{},
 					err:    nil,
@@ -76,7 +72,6 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 			name: "unsuccessful-5xx-ise",
 			fields: fields{
 				cfg: &cfg,
-				ctx: ctx,
 				sbClient: &MockSonnenBatterieClient{
 					status: sonnenbatterie.Status{},
 					err:    fmt.Errorf("somethingWentWrong"),
@@ -93,7 +88,6 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 			name: "unsuccessful-429-ratelimit",
 			fields: fields{
 				cfg: &cfg,
-				ctx: ctx,
 				sbClient: &MockSonnenBatterieClient{
 					status: sonnenbatterie.Status{},
 					err:    fmt.Errorf("somethingWentWrong"),
@@ -108,9 +102,11 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		ctx := context.Background()
 		t.Run(tt.name, func(t *testing.T) {
-			srv := httptest.NewServer(sbc(tt.fields.ctx, tt.fields.cfg, tt.fields.sbClient, tt.fields.rateLimiter))
-			resp, err := srv.Client().Get(srv.URL + "/")
+			srv := httptest.NewServer(sbc(tt.fields.cfg, tt.fields.sbClient, tt.fields.rateLimiter))
+			request, _ := http.NewRequestWithContext(ctx, http.MethodGet, srv.URL+"/", nil)
+			resp, err := srv.Client().Do(request)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Client.GetStatus() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -127,14 +123,13 @@ func Test_sbs_sonmnenBatterieController(t *testing.T) {
 	}
 }
 
-func sbc(ctx context.Context, cfg *config.Config,
+func sbc(cfg *config.Config,
 	sbClient sonnenbatterie.SonnenClient, tokenBucket RateLimiter,
 ) http.HandlerFunc {
 	tr := &sbs{
 		cfg:         cfg,
-		ctx:         ctx,
 		sbClient:    sbClient,
 		tokenBucket: tokenBucket,
 	}
-	return tr.sonmnenBatterieController
+	return tr.sonnenBatterieController
 }

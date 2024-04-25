@@ -29,6 +29,14 @@ format: ## Format and organise imports
 	@go install mvdan.cc/gofumpt@latest
 	@gofumpt -l -w .
 
+golangci-lint: ## lint runner
+	@go install github.com/golangci/golangci-lint@latest
+	@golangci-lint  run --config ./.github/config/golangci.yml -v
+
+gci: ## gci tool to organise imports
+	@go install github.com/daixiang0/gci@latest
+	@gci write --skip-generated -s default -s standard .
+
 clean: ## Cleans the build binaries
 	@rm -rf ${BIN_PREFIX}
 

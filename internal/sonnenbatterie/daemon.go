@@ -15,11 +15,10 @@ const (
 )
 
 type SonnenClient interface {
-	GetStatus() (*Status, error)
+	GetStatus(ctx context.Context) (*Status, error)
 }
 
 type Daemon struct {
-	ctx                 context.Context
 	config              *config.Config
 	sonnenClient        SonnenClient
 	lastStatusCheck     time.Time
@@ -31,18 +30,17 @@ func NewDeamon(ctx context.Context, sonnenClient SonnenClient,
 	config *config.Config, notificationChannel chan []*Status,
 ) *Daemon {
 	daemon := Daemon{
-		ctx:                 ctx,
 		config:              config,
 		sonnenClient:        sonnenClient,
 		notificationChannel: notificationChannel,
 		reverseLimitQueue:   queue.NewReversedLimitedQueue(reverseLimitQueueSize),
 	}
 
-	daemon.start()
+	daemon.start(ctx)
 	return &daemon
 }
 
-func (d *Daemon) start() {
+func (d *Daemon) start(ctx context.Context) {
 	d.lastStatusCheck = time.Now()
 	ticker := time.NewTicker(defaultTickerTimeInSecords)
 	pollingTime := time.Duration(d.config.SonnenBatteriePollingTimeInMins) * time.Minute
@@ -50,15 +48,15 @@ func (d *Daemon) start() {
 	go func() {
 		for {
 			select {
-			case <-d.ctx.Done():
-				logger.LoggerFromContext(d.ctx).Info("sonnen batterie daemon stopped")
+			case <-ctx.Done():
+				logger.LoggerFromContext(ctx).Info("sonnen batterie daemon stopped")
 				return
 			case <-ticker.C:
 				if d.lastStatusCheck.Add(pollingTime).Before(time.Now()) {
 					d.lastStatusCheck = time.Now()
-					status, err := d.sonnenClient.GetStatus()
+					status, err := d.sonnenClient.GetStatus(ctx)
 					if err != nil {
-						logger.LoggerFromContext(d.ctx).Errorf("error during communication to sonnen batterie: %v", err)
+						logger.LoggerFromContext(ctx).Errorf("error during communication to sonnen batterie: %v", err)
 						continue
 					}
 
