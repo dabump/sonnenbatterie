@@ -8,7 +8,7 @@ default: help
 
 .PHONY: test
 unit-test: ## Run all tests
-	@go clean --testcache && go test ./... -v -coverprofile coverage.out
+	@go clean --testcache && go test ./... -v -coverprofile cover.out
 
 docker: ## Build docker container & start
 	@${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
