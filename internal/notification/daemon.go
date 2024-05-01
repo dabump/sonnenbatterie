@@ -43,7 +43,7 @@ func (n *notificationEngine) start(ctx context.Context) {
 				return
 			case event := <-n.notificationChannel:
 
-				var values []int
+				var values []float64
 				for _, s := range event {
 					values = append(values, s.Usoc)
 				}

@@ -4,7 +4,7 @@ import "testing"
 
 func Test_calculate(t *testing.T) {
 	type args struct {
-		values []int
+		values []float64
 	}
 	tests := []struct {
 		name string
@@ -14,35 +14,35 @@ func Test_calculate(t *testing.T) {
 		{
 			name: "Upward trend",
 			args: args{
-				values: []int{4, 3, 2, 1},
+				values: []float64{4, 3, 2, 1},
 			},
 			want: Upward,
 		},
 		{
 			name: "Downward trend",
 			args: args{
-				values: []int{1, 2, 3, 4},
+				values: []float64{1, 2, 3, 4},
 			},
 			want: Downward,
 		},
 		{
 			name: "No trend - Equalise",
 			args: args{
-				values: []int{1, 2, 2, 1},
+				values: []float64{1, 2, 2, 1},
 			},
 			want: NoTrend,
 		},
 		{
 			name: "No trend - Too few values",
 			args: args{
-				values: []int{1},
+				values: []float64{1},
 			},
 			want: NoTrend,
 		},
 		{
 			name: "No trend - No values",
 			args: args{
-				values: []int{},
+				values: []float64{},
 			},
 			want: NoTrend,
 		},
