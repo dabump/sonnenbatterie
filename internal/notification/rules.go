@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	lowerThresholdNotification int = 20
-	upperThresholdNotification int = 80
+	lowerThresholdNotification float64 = 20
+	upperThresholdNotification float64 = 80
 )
 
 type ruleEngine struct {
@@ -28,7 +28,7 @@ func NewRulesEngine() *ruleEngine {
 	}
 }
 
-func (r *ruleEngine) dispatchNotification(ctx context.Context, values []int) bool {
+func (r *ruleEngine) dispatchNotification(ctx context.Context, values []float64) bool {
 	// Determine initial trend
 	t := trend.Calculate(values)
 	logger.LoggerFromContext(ctx).Infof("trend: %v - %v%%", t, values[0])

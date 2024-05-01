@@ -19,7 +19,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 		lastNotificationTrend trend.Trend
 	}
 	type args struct {
-		values []int
+		values []float64
 	}
 	tests := []struct {
 		name   string
@@ -37,7 +37,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: true,
 			args: args{
-				values: []int{100, 99},
+				values: []float64{100, 99},
 			},
 		},
 		{
@@ -50,7 +50,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: false,
 			args: args{
-				values: []int{100, 99},
+				values: []float64{100, 99},
 			},
 		},
 		{
@@ -63,7 +63,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: true,
 			args: args{
-				values: []int{100, 99},
+				values: []float64{100, 99},
 			},
 		},
 		{
@@ -76,7 +76,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: true,
 			args: args{
-				values: []int{0, 1, 2},
+				values: []float64{0, 1, 2},
 			},
 		},
 		{
@@ -89,7 +89,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: false,
 			args: args{
-				values: []int{0, 1, 2},
+				values: []float64{0, 1, 2},
 			},
 		},
 		{
@@ -102,7 +102,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: true,
 			args: args{
-				values: []int{0, 1, 2},
+				values: []float64{0, 1, 2},
 			},
 		},
 		{
@@ -114,7 +114,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: true,
 			args: args{
-				values: []int{upperThresholdNotification, upperThresholdNotification - 1, upperThresholdNotification - 2},
+				values: []float64{upperThresholdNotification, upperThresholdNotification - 1, upperThresholdNotification - 2},
 			},
 		},
 		{
@@ -126,7 +126,7 @@ func Test_ruleEngine_dispatchNotification(t *testing.T) {
 			},
 			want: true,
 			args: args{
-				values: []int{lowerThresholdNotification, lowerThresholdNotification + 1, lowerThresholdNotification + 2},
+				values: []float64{lowerThresholdNotification, lowerThresholdNotification + 1, lowerThresholdNotification + 2},
 			},
 		},
 	}

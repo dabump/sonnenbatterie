@@ -8,7 +8,7 @@ const (
 	NoTrend  Trend = "none"
 )
 
-func Calculate(values []int) Trend {
+func Calculate(values []float64) Trend {
 	if len(values) == 0 {
 		return NoTrend
 	}
