@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
   pull_request:
     paths-ignore:
-      - '**.md'
+      - "**.md"
 env:
-  DEFAULT_GO_VERSION: "~1.22"
+  DEFAULT_GO_VERSION: "~1.23"
 
 permissions:
   contents: read
@@ -37,7 +37,7 @@ jobs:
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/go.sum') }}
-      
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
