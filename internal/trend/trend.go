@@ -9,11 +9,7 @@ const (
 )
 
 func Calculate(values []float64) Trend {
-	if len(values) == 0 {
-		return NoTrend
-	}
-
-	if len(values) == 1 {
+	if len(values) == 0 || len(values) == 1 {
 		return NoTrend
 	}
 
@@ -21,7 +17,7 @@ func Calculate(values []float64) Trend {
 		return Upward
 	} else if values[0] < values[len(values)-1] {
 		return Downward
-	} else {
-		return NoTrend
 	}
+
+	return NoTrend
 }
