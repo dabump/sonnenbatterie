@@ -2,7 +2,7 @@ GO_FLAGS	?=
 NAME		:= sonnenbatterie
 PACKAGE		:= github.com/dabump/$(NAME)
 BIN_PREFIX	:= bin
-DOCKER_BIN	:= podman
+DOCKER_BIN	:= docker 
 
 default: help
 
@@ -11,8 +11,13 @@ test: ## Run all tests
 	@go clean --testcache && go test ./... -v -coverprofile cover.out
 
 docker: ## Build docker container & start
-	@${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
+	@${DOCKER_BIN} pull golang:alpine && \
+	${DOCKER_BIN} build -t sonnenbatterie/daemon . && \
 	${DOCKER_BIN} run -d --restart=always -p 8881:8881 --name sonnenbatterie-daemon sonnenbatterie/daemon
+
+docker-clean: ## Stops and remove running docker instance
+	@${DOCKER_BIN} stop sonnenbatterie-daemon && \
+	${DOCKER_BIN} rm sonnenbatterie-daemon
 
 generate-mocks: ## Generate mocks
 	@go generate ./...
