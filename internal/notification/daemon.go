@@ -49,11 +49,13 @@ func (n *notificationEngine) start(ctx context.Context) {
 				}
 				if rulesEngine.dispatchNotification(ctx, values) {
 					var message string
-					if values[0] == 100 {
+
+					switch values[0] {
+					case 100:
 						message = "sonnenbatterie fully charged"
-					} else if values[0] == 0 {
+					case 0:
 						message = "sonnenbatterie depleted"
-					} else {
+					default:
 						message = fmt.Sprintf("sonnenbatterie at %v%% with %s trend", values[0], trend.Calculate(values))
 					}
 					logger.LoggerFromContext(ctx).Infof("message: %v", message)
