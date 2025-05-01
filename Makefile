@@ -7,7 +7,7 @@ DOCKER_BIN	:= podman
 default: help
 
 .PHONY: test
-unit-test: ## Run all tests
+test: ## Run all tests
 	@go clean --testcache && go test ./... -v -coverprofile cover.out
 
 docker: ## Build docker container & start
