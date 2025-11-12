@@ -19,10 +19,11 @@ func newSentientHttpClientMock(t *testing.T) common.HttpClient {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	mockClient := mocks.NewMockHttpClient(ctrl)
+	ctx := context.Background()
 
 	// -- Successful
 	successfulBody := "{\"Apparent_output\":240,\"BackupBuffer\":\"0\",\"BatteryCharging\":false,\"BatteryDischarging\":false,\"Consumption_Avg\":565,\"Consumption_W\":560,\"Fac\":50.0099983215332,\"FlowConsumptionBattery\":false,\"FlowConsumptionGrid\":false,\"FlowConsumptionProduction\":true,\"FlowGridBattery\":false,\"FlowProductionBattery\":false,\"FlowProductionGrid\":true,\"GridFeedIn_W\":1960,\"IsSystemInstalled\":1,\"OperatingMode\":\"2\",\"Pac_total_W\":-5,\"Production_W\":2525,\"RSOC\":100,\"RemainingCapacity_Wh\":8283,\"Sac1\":80,\"Sac2\":80,\"Sac3\":79,\"SystemStatus\":\"OnGrid\",\"Timestamp\":\"2023-03-01 15:02:45\",\"USOC\":100,\"Uac\":243,\"Ubat\":55,\"dischargeNotAllowed\":false,\"generator_autostart\":false}"
-	successfulRequest, _ := http.NewRequest(http.MethodGet, "http://192.168.2.101/the/successful/path", nil)
+	successfulRequest, _ := http.NewRequestWithContext(ctx, http.MethodGet, "http://192.168.2.101/the/successful/path", nil)
 	successfulReponse := http.Response{
 		StatusCode: 200,
 		Body:       io.NopCloser(strings.NewReader(successfulBody)),
@@ -34,7 +35,7 @@ func newSentientHttpClientMock(t *testing.T) common.HttpClient {
 
 	// -- Uncuccessful - 500
 	unSuccessful5xxBody := "{\"error\":\"error occured\"}"
-	unSuccessful5xxRequest, _ := http.NewRequest(http.MethodGet, "http://192.168.2.101/the/unsuccessful-500/path", nil)
+	unSuccessful5xxRequest, _ := http.NewRequestWithContext(ctx, http.MethodGet, "http://192.168.2.101/the/unsuccessful-500/path", nil)
 	unSuccessful5xxReponse := http.Response{
 		StatusCode: 501,
 		Body:       io.NopCloser(strings.NewReader(unSuccessful5xxBody)),
@@ -45,7 +46,7 @@ func newSentientHttpClientMock(t *testing.T) common.HttpClient {
 		Times(1)
 
 	// -- Uncuccessful - http client
-	unSuccessfulHttpclientRequest, _ := http.NewRequest(http.MethodGet, "http://192.168.2.101/the/unsuccessful-http-client/path", nil)
+	unSuccessfulHttpclientRequest, _ := http.NewRequestWithContext(ctx, http.MethodGet, "http://192.168.2.101/the/unsuccessful-http-client/path", nil)
 	mockClient.EXPECT().
 		Do(gomock.Eq(unSuccessfulHttpclientRequest)).
 		Return(nil, fmt.Errorf("error during invoking http client logic")).
