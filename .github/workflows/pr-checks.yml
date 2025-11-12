@@ -10,7 +10,7 @@ on:
     paths-ignore:
       - "**.md"
 env:
-  DEFAULT_GO_VERSION: "~1.24"
+  DEFAULT_GO_VERSION: "~1.25"
 
 permissions:
   contents: read
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.DEFAULT_GO_VERSION }}
 
@@ -48,7 +48,7 @@ jobs:
         run: make test
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-tests
